@@ -2,9 +2,20 @@ function setup() {
   const { innerWidth, innerHeight } = window;
   createCanvas(innerWidth, innerHeight);
 
+  const FIVE_SECONDS = 5000;
+  // Instantiate the SequenceInput class every 5 seconds
+  setInterval(() => {
+    const sequence = getRandomSequence(2,2);
+    const sequenceInput = new SequenceInput(sequence, FIVE_SECONDS);
+    sequenceInput.start();
+  }, FIVE_SECONDS + 100);
+  
+  
 }
 
 function draw() {
+ 
+
 
   /**
    * For some reason instantiating the GooseManager class outside of the draw function
@@ -16,5 +27,5 @@ function draw() {
     numGeese: 13,
   });
   gooseManager.render();
-
+  
 }
