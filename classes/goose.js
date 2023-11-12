@@ -46,15 +46,24 @@ class GooseManager {
     this.x = x;
     this.y = y;
     this.debug = debug;
+
+    this.playerGoose = null;
+    this.leaderGoose = null;
+    this.leftGeese = [];
+    this.rightGeese = [];
+
+    this.#init();
   }
 
-  render() {
+  #init() {
     const geesePerSide = Math.floor(this.numGeese / 2);
     const gooseSpacing = 20;
-    const formationWidth = (this.numGeese + 1) * (this.gooseSize + gooseSpacing);
-    const formationHeight = (geesePerSide + 2) * (this.gooseSize + gooseSpacing);
+    const formationWidth =
+      (this.numGeese + 1) * (this.gooseSize + gooseSpacing);
+    const formationHeight =
+      (geesePerSide + 2) * (this.gooseSize + gooseSpacing);
     const formationX = (width - formationWidth) / 2;
-    const formationY = (height - formationWidth) / 2;
+    const formationY = (height - formationHeight) / 2;
 
     if (this.debug) {
       fill("pink");
@@ -62,34 +71,38 @@ class GooseManager {
     }
 
     /* 
-    render leader goose first so that: 
-        1. it's on top of the other geese 
+    Place leader goose first so that:
+    1. it's on top of the other geese 
         2. their position is based on the leader
     */
     const leaderX = formationWidth / 2 + formationX;
     const leaderY = gooseSpacing * 3 + formationY;
-    const leaderGoose = new Goose(this.leaderColor, leaderX, leaderY);
-    leaderGoose.render();
+    this.leaderGoose = new Goose(this.leaderColor, leaderX, leaderY);
 
-    
     for (let i = 0; i < geesePerSide; i++) {
       const spacing = (i + 1) * (this.gooseSize + gooseSpacing);
       const leftGooseX = leaderX - spacing;
       const rightGooseX = leaderX + spacing;
       const gooseY = leaderY + spacing;
 
-      const leftGoose = new Goose(this.gooseColor, leftGooseX, gooseY);
-      leftGoose.render();
-
       // render right side of formation, but leaves one space for the player
       const hasToRenderPlayer = i === geesePerSide - 1;
       if (hasToRenderPlayer) {
-        const playerGoose = new Goose(this.playerColor, rightGooseX, gooseY);
-        playerGoose.render();
+        this.playerGoose = new Goose(this.playerColor, leftGooseX, gooseY);
       } else {
-        const rightGoose = new Goose(this.gooseColor, rightGooseX, gooseY);
-        rightGoose.render();
+        const leftGoose = new Goose(this.gooseColor, leftGooseX, gooseY);
+        this.leftGeese.push(leftGoose);
       }
+
+      const rightGoose = new Goose(this.gooseColor, rightGooseX, gooseY);
+      this.rightGeese.push(rightGoose);
     }
+  }
+
+  render() {
+    this.leaderGoose.render();
+    this.leftGeese.forEach((goose) => goose.render());
+    this.rightGeese.forEach((goose) => goose.render());
+    this.playerGoose.render();
   }
 }
