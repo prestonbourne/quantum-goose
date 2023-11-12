@@ -20,8 +20,9 @@ function getRandomSequence(minLength, maxLength) {
   return result;
 }
 
-function isAlnum(str) {
-    return ALNUM_CHARS.includes(str);
+function isAlnumChar(str) {
+    if (str.length !== 1) return false;
+    return /^[a-zA-Z0-9]+$/.test(str);
 }
 
 
