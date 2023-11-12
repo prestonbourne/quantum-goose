@@ -49,14 +49,16 @@ class GooseManager {
   }
 
   render() {
+    const geesePerSide = Math.floor(this.numGeese / 2);
     const gooseSpacing = 20;
-    const formationSize = (this.numGeese + 1) * (this.gooseSize + gooseSpacing);
-    const formationX = (width - formationSize) / 2;
-    const formationY = (height - formationSize) / 2;
+    const formationWidth = (this.numGeese + 1) * (this.gooseSize + gooseSpacing);
+    const formationHeight = (geesePerSide + 2) * (this.gooseSize + gooseSpacing);
+    const formationX = (width - formationWidth) / 2;
+    const formationY = (height - formationWidth) / 2;
 
     if (this.debug) {
       fill("pink");
-      rect(formationX, formationY, formationSize, formationSize);
+      rect(formationX, formationY, formationWidth, formationHeight);
     }
 
     /* 
@@ -64,12 +66,12 @@ class GooseManager {
         1. it's on top of the other geese 
         2. their position is based on the leader
     */
-    const leaderX = formationSize / 2 + formationX;
-    const leaderY = gooseSpacing * 2 + formationY;
+    const leaderX = formationWidth / 2 + formationX;
+    const leaderY = gooseSpacing * 3 + formationY;
     const leaderGoose = new Goose(this.leaderColor, leaderX, leaderY);
     leaderGoose.render();
 
-    const geesePerSide = Math.floor(this.numGeese / 2);
+    
     for (let i = 0; i < geesePerSide; i++) {
       const spacing = (i + 1) * (this.gooseSize + gooseSpacing);
       const leftGooseX = leaderX - spacing;
