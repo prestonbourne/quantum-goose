@@ -103,6 +103,7 @@ class SequenceView {
 
     this.promptBox.appendChild(document.createElement("br"));
     this.charBox = document.createElement("div");
+    this.charBox.classList.add("sequence-view__char-box");
     this.promptBox.appendChild(this.charBox);
     this.promptBox.appendChild(this.charBox);
     document.body.appendChild(this.promptBox);

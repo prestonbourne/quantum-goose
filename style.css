@@ -149,3 +149,10 @@ table {
   font-weight: bold;
   text-align: center;
 }
+
+.sequence-view .sequence-view__char-box {
+  display: inline-block;
+  height: 30px;
+  padding: 8px;
+  line-height: 30px;
+}

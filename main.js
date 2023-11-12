@@ -15,8 +15,6 @@ function setup() {
 
 function draw() {
  
-
-
   /**
    * For some reason instantiating the GooseManager class outside of the draw function
    * throws an undefined error.
@@ -27,5 +25,5 @@ function draw() {
     numGeese: 13,
   });
   gooseManager.render();
-  
+
 }
