@@ -43,7 +43,7 @@ class SequenceInput {
     const inputChar = event.key;
 
     // Ignore non-alphanumeric characters
-    if (!isAlnum(inputChar)) {
+    if (!isAlnumChar(inputChar)) {
       return;
     }
 
