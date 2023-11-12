@@ -11,4 +11,4 @@ To run and view the project locally, run the following terminal command `npm run
 
 ## Todos
 
-- [] Add Readme Docs for building the project
+- [ ] Add Readme Docs for building the project
