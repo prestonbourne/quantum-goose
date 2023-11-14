@@ -11,7 +11,14 @@
 
 const ANIMATION_DURATION_MS = 250;
 
+
 class SequenceInput {
+  /**
+   * Creates a new Controls instance.
+   * @constructor
+   * @param {string} sequence - The sequence that the user needs to enter.
+   * @param {number} duration - The duration in milliseconds that the user has to enter the sequence.
+   */
   constructor(sequence, duration) {
     this.sequence = sequence;
     this.duration = duration;
@@ -19,7 +26,7 @@ class SequenceInput {
     this.timer = null;
     this.input = "";
     /**
-     * @todo(@prestonbourne) - Add supoort for callbacks so that we can do something when the user succeeds or fails.
+     * @todo(@prestonbourne) - Add support for callbacks so that we can do something when the user succeeds or fails.
      */
     this.onSuccess = null;
     this.onError = null;
@@ -57,21 +64,18 @@ class SequenceInput {
     if (event.metaKey || event.ctrlKey || event.altKey) {
       return;
     }
-
-
-    const inputChar = event.key;
-    // Ignore non-alphanumeric characters
-    if (!isAlnumChar(inputChar)) {
+    const { key } = event;
+    if (!isAlnumChar(key)) {
       return;
     }
 
-    this.view.addText(inputChar);
-    if (inputChar !== this.sequence[this.currentPhase]) {
+    this.view.addText(key);
+    if (key !== this.sequence[this.currentPhase]) {
       this.view.failure();
       console.error(
         `Error: Expected ${
           this.sequence[this.currentPhase]
-        }, but received ${inputChar}`
+        }, but received ${key}`
       );
       this.#stop();
 
@@ -79,11 +83,11 @@ class SequenceInput {
         this.onError(
           `Expected ${
             this.sequence[this.currentPhase]
-          }, but received ${inputChar}`
+          }, but received ${key}`
         );
       }
     } else {
-      this.input += inputChar;
+      this.input += key;
 
       this.currentPhase++;
       if (this.currentPhase === this.sequence.length) {
