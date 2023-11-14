@@ -134,6 +134,13 @@ table {
   border-spacing: 0;
 }
 
+/* End of reset */
+
+
+:root {
+  --shake-duration: 250ms;
+}
+
 .sequence-view {
   position: fixed;
   top: 90%;
@@ -150,9 +157,31 @@ table {
   text-align: center;
 }
 
-.sequence-view .sequence-view__char-box {
+.sequence-view__char-box {
   display: inline-block;
   height: 30px;
   padding: 8px;
   line-height: 30px;
+}
+
+.shake {
+  animation: shake-prompt var(--shake-duration);
+}
+
+@keyframes shake-prompt {
+  0% {
+    transform: translate(-50%, -50%);
+  }
+  25% {
+    transform: translate(-60%, -50%);
+  }
+  50% {
+    transform: translate(-50%, -50%);
+  }
+  75% {
+    transform: translate(-40%, -50%);
+  }
+  100% {
+    transform: translate(-50%, -50%);
+  }
 }
