@@ -1,10 +1,36 @@
+/**
+ * @fileoverview
+ * This file contains all the classes related to the geese.
+ * @todo - Add support for multiple difficulty levels.
+ * @todo - Modify the constructor to accept an options object instead of a bunch of parameters.
+ * @todo - Migrate to the boids algorithm.
+ * - @prestonbourne
+ */
+
+/**
+ * @class - The Base Goose class. The other classes extend this class,
+ *  We don't want to access this class directly, but rather through the {@linkcode GooseManager} class.
+ *  
+ * @todo(optional) - Make this abstract so that it can't be instantiated. For this we'd need a `ClassicalGoose` class that inherits from this class for true OOP.
+ */
 class Goose {
+  /**
+   * Creates a new instance of the Goose class.
+   * @constructor
+   * @param {string} color - The color of the goose.
+   * @param {number} x - The x-coordinate of the goose.
+   * @param {number} y - The y-coordinate of the goose.
+   */
   constructor(color, x, y) {
     this.color = color;
     this.x = x;
     this.y = y;
   }
 
+  /**
+   * Renders the goose on the canvas. Must be called in 
+   * the p5.js {@linkcode draw} function.
+   */
   render() {
     fill(this.color);
     ellipse(this.x, this.y, 80, 80);
@@ -51,6 +77,7 @@ class GooseManager {
     this.leaderGoose = null;
     this.leftGeese = [];
     this.rightGeese = [];
+    this.entangledGeese = [];
 
     this.#init();
   }
@@ -88,7 +115,11 @@ class GooseManager {
       // render right side of formation, but leaves one space for the player
       const hasToRenderPlayer = i === geesePerSide - 1;
       if (hasToRenderPlayer) {
-        this.playerGoose = new Goose(this.playerColor, leftGooseX, gooseY);
+        this.playerGoose = new PlayerGoose(
+          this.playerColor,
+          leftGooseX,
+          gooseY
+        );
       } else {
         const leftGoose = new Goose(this.gooseColor, leftGooseX, gooseY);
         this.leftGeese.push(leftGoose);
@@ -99,10 +130,72 @@ class GooseManager {
     }
   }
 
+  entangle() {
+    this.playerGoose.entangle();
+
+    /**
+     * @todo
+     * Change game state to begin entangling leader goose if
+     * no goose are remaining.
+     */
+
+    if (this.leftGeese.length === 0 && this.rightGeese.length === 0) {
+      console.error("No more geese to entangle");
+      return;
+    }
+
+    // get reference to the next goose
+    const hasMoreLeftGeese = this.leftGeese.length > 0;
+    const gooseList = hasMoreLeftGeese ? this.leftGeese : this.rightGeese;
+
+    // remove goose from the array
+    let nextGooseToEntagle = gooseList.pop();
+    const entangledGoose = new EntangledGoose(
+      this.playerColor,
+      nextGooseToEntagle.x,
+      nextGooseToEntagle.y
+    );
+
+    this.entangledGeese.push(entangledGoose);
+  }
+
   render() {
     this.leaderGoose.render();
     this.leftGeese.forEach((goose) => goose.render());
     this.rightGeese.forEach((goose) => goose.render());
+    this.entangledGeese.forEach((goose) => goose.render());
     this.playerGoose.render();
+  }
+}
+
+class PlayerGoose extends Goose {
+  constructor(color, x, y) {
+    super(color, x, y);
+  }
+
+  entangle() {
+    console.log("entangle");
+  }
+}
+
+class EntangledGoose extends Goose {
+  constructor(color, x, y) {
+    super(color, x, y);
+    this.originX = x;
+    this.originY = y;
+  }
+  render() {
+    fill(this.color);
+
+    /**
+     * @todo
+     * apply the boids algorithm to the entangled geese
+     * for now they'll just do a funky dance
+     * - @prestonbourne
+     */
+    const JITTER = 10;
+    this.x = random(this.originX - JITTER, this.originX + JITTER);
+    this.y = random(this.originY - JITTER, this.originY + JITTER);
+    ellipse(this.x, this.y, 80, 80);
   }
 }

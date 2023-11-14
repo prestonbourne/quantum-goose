@@ -1,3 +1,16 @@
+/**
+ * @fileoverview Contains classes for the controls of the game, ie when the user types in the gate
+ * right now it's just a sequence of random characters.
+ * 
+ * @todo - This can be broken up into multiple files. There's likely going to be a lot of code here. When we add a class for managing 
+ * Sound and Music
+ * - @prestonbourne
+ */
+ 
+
+
+const ANIMATION_DURATION_MS = 250;
+
 class SequenceInput {
   constructor(sequence, duration) {
     this.sequence = sequence;
@@ -6,8 +19,7 @@ class SequenceInput {
     this.timer = null;
     this.input = "";
     /**
-     * @prestonbourne
-     * @todo - Add supoort for callbacks so that we can do something when the user succeeds or fails.
+     * @todo(@prestonbourne) - Add supoort for callbacks so that we can do something when the user succeeds or fails.
      */
     this.onSuccess = null;
     this.onError = null;
@@ -26,7 +38,7 @@ class SequenceInput {
     this.timer = setTimeout(() => {
       console.log("Time is up!");
       this.#stop();
-      this.view.remove();
+      this.view.failure();
       if (this.onError) {
         this.onError("Time is up!");
       }
@@ -40,8 +52,14 @@ class SequenceInput {
   }
 
   handleKeyDown = (event) => {
-    const inputChar = event.key;
+  
+    // ignore modifier keys
+    if (event.metaKey || event.ctrlKey || event.altKey) {
+      return;
+    }
 
+
+    const inputChar = event.key;
     // Ignore non-alphanumeric characters
     if (!isAlnumChar(inputChar)) {
       return;
@@ -70,7 +88,6 @@ class SequenceInput {
       this.currentPhase++;
       if (this.currentPhase === this.sequence.length) {
         this.view.success();
-
         this.#stop();
         if (this.onSuccess) {
           this.onSuccess();
@@ -90,9 +107,6 @@ class SequenceView {
    * @constructor
    * @param {Object} options - The options for the prompt.
    * @param {string} options.message - The message to display in the prompt.
-   * 
-   * @liz435
-   * @todo Move styles to a stylesheet and use classes instead of inline styles.
    */
   constructor({ message = "" }) {
 
@@ -117,16 +131,14 @@ class SequenceView {
     this.promptBox.style.backgroundColor = "lime";
     setTimeout(() => {
       this.promptBox.remove();
-    }, 250);
+    }, ANIMATION_DURATION_MS);
   }
 
   failure() {
     this.promptBox.style.backgroundColor = "red";
+    this.promptBox.classList.add("shake");
     setTimeout(() => {
       this.promptBox.remove();
-    }, 250);
-  }
-  remove() {
-    this.promptBox.remove();
+    }, ANIMATION_DURATION_MS);
   }
 }
