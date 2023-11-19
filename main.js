@@ -12,6 +12,18 @@
  */
 let gooseManager = null;
 
+/**
+ * The sceneNum variable indicates which scene is actively displaying in the browser
+ * Scene 0: Title Screen
+ * Scene 1: Instruction Screen
+ * Scene 2: Entanglement Minigame
+ * Scene 3: Measurement Minigame
+ * Scene 4: QG Abandoned, Lose + Retry Screen
+ * Scene 5: Quantum Swarm, Win + Retry Screen
+ * - @lees846
+ */
+let sceneNum = 0;
+
 function setup() {
   const { innerWidth, innerHeight } = window;
   createCanvas(innerWidth, innerHeight);
@@ -45,8 +57,44 @@ function setup() {
   });
 }
 
-function draw() {
-  background(255);
-
+/**
+ * main.js should be the game manager, we shouldn't have things like background
+ * in here I don't think. Each scene (now in separate files) should do its own
+ * formatting, rendering, thinking, etc.
+ * - @lees846
+ */
+function draw() {  
   gooseManager.render();
+  // Swich case for scenes
+  switch(sceneNum){
+      // Scene 0: Title Screen 
+        case 0:
+          titleScreen();
+        break;
+
+      // Scene 1: Instruction Screen
+        case 1:
+          scene1();
+        break;
+
+      // Scene 2: Entanglement Minigame
+        case 2:
+          scene2();
+        break;
+        
+      // Scene 3: Measurement Minigame
+        case 3:
+          scene3();
+        break;
+        
+      // Scene 4: QG Abandoned, Lose + Retry Screen
+        case 4:
+          scene4();
+        break;
+      
+      // Scene 5: Quantum Swarm, Win + Retry Screen
+        case 5:
+          scene5();
+        break;
+    }
 }
