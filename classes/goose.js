@@ -13,10 +13,12 @@ class Goose {
    * @param {number} x - The x-coordinate of the goose.
    * @param {number} y - The y-coordinate of the goose.
    */
-  constructor(color, x, y) {
+  constructor(color, x, y, classic) {
     this.color = color;
     this.x = x;
     this.y = y;
+    this.classic = classic
+    
   }
 
   /**
@@ -24,8 +26,8 @@ class Goose {
    * the p5.js {@linkcode draw} function.
    */
   render() {
-    fill(this.color);
-    ellipse(this.x, this.y, 80, 80);
+    // fill(this.color);
+    image(this.classic,this.x, this.y);
   }
 }
 
@@ -50,10 +52,12 @@ class GooseManager {
     playerColor = "blue",
     gooseColor = "gray",
     leaderColor = "red",
-    gooseSize = 80,
+    gooseSize = 100,
     x = 0,
     y = 0,
     debug = false,
+    img,
+    classic
   }) {
     if (numGeese < 1) throw new Error("numGeese must be greater than 0");
     if (numGeese % 2 === 0) throw new Error("numGeese must be an odd number");
@@ -73,19 +77,21 @@ class GooseManager {
     this.leftGeese = [];
     this.rightGeese = [];
     this.entangledGeese = [];
+    this.img = img
+    this.classic = classic
 
     this.#init();
   }
 
   #init() {
     const geesePerSide = Math.floor(this.numGeese / 2);
-    const gooseSpacing = 20;
+    const gooseSpacing = 50;
     const formationWidth =
       (this.numGeese + 1) * (this.gooseSize + gooseSpacing);
     const formationHeight =
       (geesePerSide + 2) * (this.gooseSize + gooseSpacing);
-    const formationX = (width - formationWidth) / 2;
-    const formationY = (height - formationHeight) / 2;
+    const formationX = (width - 1.3*formationWidth) ;
+    const formationY = (height - 1.2*formationHeight) ;
 
     if (this.debug) {
       fill("pink");
@@ -99,8 +105,7 @@ class GooseManager {
     */
     const leaderX = formationWidth / 2 + formationX;
     const leaderY = gooseSpacing * 3 + formationY;
-    this.leaderGoose = new Goose(this.leaderColor, leaderX, leaderY);
-
+    this.leaderGoose = new Goose(this.leaderColor, leaderX, leaderY, this.classic);
     for (let i = 0; i < geesePerSide; i++) {
       const spacing = (i + 1) * (this.gooseSize + gooseSpacing);
       const leftGooseX = leaderX - spacing;
@@ -115,14 +120,16 @@ class GooseManager {
           x: leftGooseX,
           y: gooseY,
           size: this.gooseSize,
+          img: this.img
+
         });
         this.flocker.addBoid(this.playerGoose);
       } else {
-        const leftGoose = new Goose(this.gooseColor, leftGooseX, gooseY);
+        const leftGoose = new Goose(this.gooseColor, leftGooseX, gooseY, this.classic);
         this.leftGeese.push(leftGoose);
       }
 
-      const rightGoose = new Goose(this.gooseColor, rightGooseX, gooseY);
+      const rightGoose = new Goose(this.gooseColor, rightGooseX, gooseY,this.classic) ;
       this.rightGeese.push(rightGoose);
     }
   }
@@ -142,11 +149,14 @@ class GooseManager {
     // remove goose from the array
     let nextGooseToEntagle = gooseList.pop();
     const { x, y } = nextGooseToEntagle;
+
+
     const entangledGoose = new Boid({
       x,
       y,
       size: this.gooseSize,
       color: this.playerColor,
+      img: this.img
     });
     this.flocker.addBoid(entangledGoose);
     this.entangledGeese.push(entangledGoose);

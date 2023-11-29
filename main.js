@@ -3,6 +3,11 @@ let flocker = null;
 let gooseManager = null;
 
 
+function preload(){
+  quantumGooseImg = loadImage('img/goose.png')
+  classicGooseImg = loadImage('img/goose3.png')
+}
+
 function setup() {
   const { innerWidth, innerHeight } = window;
   createCanvas(innerWidth, innerHeight);
@@ -36,7 +41,9 @@ function setup() {
   flocker = new Flock();
   gooseManager = new GooseManager({
     numGeese: 7,
-    flocker: flocker
+    flocker: flocker,
+    img: quantumGooseImg,
+    classic: classicGooseImg
   });
 }
 function draw() {
