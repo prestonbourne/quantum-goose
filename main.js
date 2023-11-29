@@ -63,7 +63,6 @@ function draw() {
     // Scene 2: Entanglement Minigame
     case 2:
       scene2();
-
       gooseManager.render()
       break;
 
@@ -81,6 +80,7 @@ function draw() {
     case 5:
       scene5();
       break;
+      
     default:
       sceneNum = 0;
       break;

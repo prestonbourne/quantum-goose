@@ -59,6 +59,7 @@ class SequenceInput {
 
   #stop() {
     clearTimeout(this.timer);
+    this.view.failedAttempts +=1;
     document.removeEventListener("keydown", this.handleKeyDown.bind(this));
   }
 
@@ -92,10 +93,10 @@ class SequenceInput {
       }
     } else {
       this.input += key;
-
       this.currentPhase++;
       if (this.currentPhase === this.sequence.length) {
         this.view.success();
+        console.log(this.view.successAttempts)
         this.#stop();
         if (this.onSuccess) {
           this.onSuccess(this.sound);
@@ -116,7 +117,7 @@ class SequenceView {
    * @param {Object} options - The options for the prompt.
    * @param {string} options.message - The message to display in the prompt.
    */
-  constructor({ message = "", sound }) {
+  constructor({ message = "", sound}) {
 
     this.message = message;
     this.promptBox = document.createElement("div");
@@ -129,6 +130,8 @@ class SequenceView {
     this.promptBox.appendChild(this.charBox);
     this.promptBox.appendChild(this.charBox);
     this.sound = sound
+    this.failedAttempts=0;
+    this.successAttempts=0;
     document.body.appendChild(this.promptBox);
   }
 
@@ -138,7 +141,8 @@ class SequenceView {
 
   success() {
     this.promptBox.style.backgroundColor = "lime";
-    
+    this.successAttempts ++;
+    console.log(this.successAttempts)
     setTimeout(() => {
       this.promptBox.remove();
       if (this.sound.isPlaying()) {
@@ -153,8 +157,22 @@ class SequenceView {
   failure() {
     this.promptBox.style.backgroundColor = "red";
     this.promptBox.classList.add("shake");
+    this.failedAttempts ++;
+    this.checkStatus();
     setTimeout(() => {
       this.promptBox.remove();
     }, ANIMATION_DURATION_MS);
+    
   }
+
+  checkStatus(){
+    // console.log(this.failedAttempts)
+    // if(this.failedAttempts >=4){
+    //   return sceneNum = 4
+    // }
+    if(this.successAttempts ==3){
+      return sceneNum = 5
+    }
+  }
+
 }
