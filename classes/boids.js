@@ -35,11 +35,11 @@ class Boid {
     maxForce = 0.05,
     color = "gray",
   }) {
-    this.acceleration = createVector(0, 0);
+    this.acceleration = createVector(1, 1);
     this.velocity = createVector(random(-1, 1), random(-1, 1));
     this.position = createVector(x, y);
     this.size = size;
-    this.maxSpeed = maxSpeed;
+    this.maxSpeed = maxSpeed + 10;
     this.maxForce = maxForce;
     this.color = color;
   }
@@ -75,10 +75,10 @@ class Boid {
   }
 
   seek(target) {
-    let desired = p5.Vector.sub(target, this.position);
+    const desired = p5.Vector.sub(target, this.position);
     desired.normalize();
     desired.mult(this.maxSpeed);
-    let steer = p5.Vector.sub(desired, this.velocity);
+    const steer = p5.Vector.sub(desired, this.velocity);
     steer.limit(this.maxForce);
     return steer;
   }
@@ -126,12 +126,12 @@ class Boid {
   }
 
   separate(boids) {
-    let desiredseparation = 25.0;
+    let desiredSeperation = 25.0;
     let steer = createVector(0, 0);
     let count = 0;
     for (let i = 0; i < boids.length; i++) {
       let d = p5.Vector.dist(this.position, boids[i].position);
-      if (d > 0 && d < desiredseparation) {
+      if (d > 0 && d < desiredSeperation) {
         let diff = p5.Vector.sub(this.position, boids[i].position);
         diff.normalize();
         diff.div(d);
@@ -152,12 +152,12 @@ class Boid {
   }
 
   align(boids) {
-    let neighbordist = 50;
+    const NEIGHBOR_DIST = 50;
     let sum = createVector(0, 0);
     let count = 0;
     for (let i = 0; i < boids.length; i++) {
       let d = p5.Vector.dist(this.position, boids[i].position);
-      if (d > 0 && d < neighbordist) {
+      if (d > 0 && d < NEIGHBOR_DIST) {
         sum.add(boids[i].velocity);
         count++;
       }
