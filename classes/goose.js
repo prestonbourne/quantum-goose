@@ -2,17 +2,9 @@
  * @fileoverview
  * This file contains all the classes related to the geese.
  * @todo - Add support for multiple difficulty levels.
- * @todo - Modify the constructor to accept an options object instead of a bunch of parameters.
- * @todo - Migrate to the boids algorithm.
  * - @prestonbourne
  */
 
-/**
- * @class - The Base Goose class. The other classes extend this class,
- *  We don't want to access this class directly, but rather through the {@linkcode GooseManager} class.
- *  
- * @todo(optional) - Make this abstract so that it can't be instantiated. For this we'd need a `ClassicalGoose` class that inherits from this class for true OOP.
- */
 class Goose {
   /**
    * Creates a new instance of the Goose class.
@@ -28,7 +20,7 @@ class Goose {
   }
 
   /**
-   * Renders the goose on the canvas. Must be called in 
+   * Renders the goose on the canvas. Must be called in
    * the p5.js {@linkcode draw} function.
    */
   render() {
@@ -43,6 +35,7 @@ class GooseManager {
    * @constructor
    * @param {Object} options - The options object.
    * @param {number} [options.numGeese=7] - The number of geese.
+   * @param {Flock} [options.flocker] - Handles the flocking behavior of the entangled geese.
    * @param {string} [options.playerColor='blue'] - The color of the player.
    * @param {string} [options.gooseColor='gray'] - The color of the geese.
    * @param {string} [options.leaderColor='red'] - The color of the leader goose.
@@ -53,10 +46,11 @@ class GooseManager {
    */
   constructor({
     numGeese = 5,
+    flocker,
     playerColor = "blue",
     gooseColor = "gray",
     leaderColor = "red",
-    gooseSize = 50,
+    gooseSize = 80,
     x = 0,
     y = 0,
     debug = false,
@@ -64,6 +58,7 @@ class GooseManager {
     if (numGeese < 1) throw new Error("numGeese must be greater than 0");
     if (numGeese % 2 === 0) throw new Error("numGeese must be an odd number");
 
+    this.flocker = flocker;
     this.numGeese = numGeese;
     this.playerColor = playerColor;
     this.gooseColor = gooseColor;
@@ -100,7 +95,7 @@ class GooseManager {
     /* 
     Place leader goose first so that:
     1. it's on top of the other geese 
-        2. their position is based on the leader
+    2. their position is based on the leader
     */
     const leaderX = formationWidth / 2 + formationX;
     const leaderY = gooseSpacing * 3 + formationY;
@@ -115,11 +110,13 @@ class GooseManager {
       // render right side of formation, but leaves one space for the player
       const hasToRenderPlayer = i === geesePerSide - 1;
       if (hasToRenderPlayer) {
-        this.playerGoose = new PlayerGoose(
-          this.playerColor,
-          leftGooseX,
-          gooseY
-        );
+        this.playerGoose = new Boid({
+          color: this.playerColor,
+          x: leftGooseX,
+          y: gooseY,
+          size: this.gooseSize,
+        });
+        this.flocker.addBoid(this.playerGoose);
       } else {
         const leftGoose = new Goose(this.gooseColor, leftGooseX, gooseY);
         this.leftGeese.push(leftGoose);
@@ -131,13 +128,7 @@ class GooseManager {
   }
 
   entangle() {
-    this.playerGoose.entangle();
-
-    /**
-     * @todo
-     * Change game state to begin entangling leader goose if
-     * no goose are remaining.
-     */
+    // this.playerGoose.entangle();
 
     if (this.leftGeese.length === 0 && this.rightGeese.length === 0) {
       console.error("No more geese to entangle");
@@ -150,16 +141,20 @@ class GooseManager {
 
     // remove goose from the array
     let nextGooseToEntagle = gooseList.pop();
-    const entangledGoose = new EntangledGoose(
-      this.playerColor,
-      nextGooseToEntagle.x,
-      nextGooseToEntagle.y
-    );
-
+    const { x, y } = nextGooseToEntagle;
+    const entangledGoose = new Boid({
+      x,
+      y,
+      size: this.gooseSize,
+      color: this.playerColor,
+    });
+    this.flocker.addBoid(entangledGoose);
     this.entangledGeese.push(entangledGoose);
   }
 
   render() {
+    
+    this.flocker.run();
     this.leaderGoose.render();
     this.leftGeese.forEach((goose) => goose.render());
     this.rightGeese.forEach((goose) => goose.render());
