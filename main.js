@@ -1,28 +1,7 @@
-/**
- * @fileoverview
- *
- * @todo - There will likely need to be some restructuring of the code in the {@linkcode setup} if we really want to hit that stretch goal of multiple difficulty levels.
- */
-
-/**
- * Manages the geese, for some reason instantiating the GooseManager class outside of a p5.js function
- * throws an undefined error.
- * Something to do with p5.js magic, It's memory leaky but it's fine.
- * @type {GooseManager | null}
- */
+let sceneNum = 2;
+let flocker = null;
 let gooseManager = null;
 
-/**
- * The sceneNum variable indicates which scene is actively displaying in the browser
- * Scene 0: Title Screen
- * Scene 1: Instruction Screen
- * Scene 2: Entanglement Minigame
- * Scene 3: Measurement Minigame
- * Scene 4: QG Abandoned, Lose + Retry Screen
- * Scene 5: Quantum Swarm, Win + Retry Screen
- * - @lees846
- */
-let sceneNum = 0;
 
 function setup() {
   const { innerWidth, innerHeight } = window;
@@ -47,54 +26,54 @@ function setup() {
     const sequenceInput = new SequenceInput(sequence, FOUR_SECONDS);
     sequenceInput.onSuccess = () => {
       console.log("Success!");
+      console.log("this code runs");
       gooseManager.entangle();
     };
     sequenceInput.start();
   }, FOUR_SECONDS + 500);
 
+
+  flocker = new Flock();
   gooseManager = new GooseManager({
-    numGeese: 13,
+    numGeese: 7,
+    flocker: flocker
   });
 }
+function draw() {
+  
+  switch (sceneNum) {
+    // Scene 0: Title Screen
+    case 0:
+      titleScreen();
+      break;
 
-/**
- * main.js should be the game manager, we shouldn't have things like background
- * in here I don't think. Each scene (now in separate files) should do its own
- * formatting, rendering, thinking, etc.
- * - @lees846
- */
-function draw() {  
-  gooseManager.render();
-  // Swich case for scenes
-  switch(sceneNum){
-      // Scene 0: Title Screen 
-        case 0:
-          titleScreen();
-        break;
+    // Scene 1: Instruction Screen
+    case 1:
+      scene1();
+      break;
 
-      // Scene 1: Instruction Screen
-        case 1:
-          scene1();
-        break;
+    // Scene 2: Entanglement Minigame
+    case 2:
+      scene2();
+      gooseManager.render()
+      break;
 
-      // Scene 2: Entanglement Minigame
-        case 2:
-          scene2();
-        break;
-        
-      // Scene 3: Measurement Minigame
-        case 3:
-          scene3();
-        break;
-        
-      // Scene 4: QG Abandoned, Lose + Retry Screen
-        case 4:
-          scene4();
-        break;
-      
-      // Scene 5: Quantum Swarm, Win + Retry Screen
-        case 5:
-          scene5();
-        break;
-    }
+    // Scene 3: Measurement Minigame
+    case 3:
+      scene3();
+      break;
+
+    // Scene 4: QG Abandoned, Lose + Retry Screen
+    case 4:
+      scene4();
+      break;
+
+    // Scene 5: Quantum Swarm, Win + Retry Screen
+    case 5:
+      scene5();
+      break;
+    default:
+      sceneNum = 0;
+      break;
+  }
 }

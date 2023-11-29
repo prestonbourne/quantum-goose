@@ -12,3 +12,7 @@ To run and view the project locally, run the following terminal command `npm run
 ## Todos
 
 - [ ] Add Readme Docs for building the project
+- [ ] Set up proper honking intervals from LeadGoose
+- [ ] Lose state triggered by measurement from LeadGosee
+- [ ] Build out title screen
+- [ ] Build out intructions screen
