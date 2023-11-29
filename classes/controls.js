@@ -18,13 +18,15 @@ class SequenceInput {
    * @constructor
    * @param {string} sequence - The sequence that the user needs to enter.
    * @param {number} duration - The duration in milliseconds that the user has to enter the sequence.
+   * @param {Object} sound - The honk sound goose make when goose turn into quantum goose
    */
-  constructor(sequence, duration) {
+  constructor(sequence, duration, sound) {
     this.sequence = sequence;
     this.duration = duration;
     this.currentPhase = 0;
     this.timer = null;
     this.input = "";
+    this.sound = sound
     /**
      * @todo(@prestonbourne) - Add support for callbacks so that we can do something when the user succeeds or fails.
      */
@@ -34,6 +36,8 @@ class SequenceInput {
       message: `Enter the following sequence within ${
         this.duration / 1000
       } seconds: ${this.sequence}`,
+      sound: this.sound
+      
     });
   }
 
@@ -94,7 +98,7 @@ class SequenceInput {
         this.view.success();
         this.#stop();
         if (this.onSuccess) {
-          this.onSuccess();
+          this.onSuccess(this.sound);
         }
       }
     }
@@ -112,7 +116,7 @@ class SequenceView {
    * @param {Object} options - The options for the prompt.
    * @param {string} options.message - The message to display in the prompt.
    */
-  constructor({ message = "" }) {
+  constructor({ message = "", sound }) {
 
     this.message = message;
     this.promptBox = document.createElement("div");
@@ -124,6 +128,7 @@ class SequenceView {
     this.charBox.classList.add("sequence-view__char-box");
     this.promptBox.appendChild(this.charBox);
     this.promptBox.appendChild(this.charBox);
+    this.sound = sound
     document.body.appendChild(this.promptBox);
   }
 
@@ -133,8 +138,15 @@ class SequenceView {
 
   success() {
     this.promptBox.style.backgroundColor = "lime";
+    
     setTimeout(() => {
       this.promptBox.remove();
+      if (this.sound.isPlaying()) {
+        // .isPlaying() returns a boolean
+        this.sound.stop();
+      } else {
+        this.sound.play();
+      }
     }, ANIMATION_DURATION_MS);
   }
 

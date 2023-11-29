@@ -4,8 +4,9 @@ let gooseManager = null;
 
 
 function preload(){
-  quantumGooseImg = loadImage('img/goose.png')
-  classicGooseImg = loadImage('img/goose3.png')
+  quantumGooseImg = loadImage('assets/goose.png')
+  classicGooseImg = loadImage('assets/goose3.png')
+  sound = loadSound('assets/GeeseHonk.wav')
 }
 
 function setup() {
@@ -28,7 +29,7 @@ function setup() {
       MIN_SEQUENCE_LENGTH,
       MAX_SEQUENCE_LENGTH
     );
-    const sequenceInput = new SequenceInput(sequence, FOUR_SECONDS);
+    const sequenceInput = new SequenceInput(sequence, FOUR_SECONDS, sound);
     sequenceInput.onSuccess = () => {
       console.log("Success!");
       console.log("this code runs");
@@ -62,6 +63,7 @@ function draw() {
     // Scene 2: Entanglement Minigame
     case 2:
       scene2();
+
       gooseManager.render()
       break;
 
