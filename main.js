@@ -82,19 +82,14 @@ function draw() {
           scene2();
         break;
         
-      // Scene 3: Measurement Minigame
+      // Scene 3: QG Abandoned, Lose + Retry Screen
         case 3:
           scene3();
         break;
-        
-      // Scene 4: QG Abandoned, Lose + Retry Screen
+      
+      // Scene 4: Quantum Swarm, Win + Retry Screen
         case 4:
           scene4();
-        break;
-      
-      // Scene 5: Quantum Swarm, Win + Retry Screen
-        case 5:
-          scene5();
         break;
     }
 }
