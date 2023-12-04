@@ -17,17 +17,27 @@ let gooseManager = null;
  * Scene 0: Title Screen
  * Scene 1: Instruction Screen
  * Scene 2: Entanglement Minigame
- * Scene 3: Measurement Minigame
- * Scene 4: QG Abandoned, Lose + Retry Screen
- * Scene 5: Quantum Swarm, Win + Retry Screen
+ * Scene 3: QG Abandoned, Lose + Retry Screen
+ * Scene 4: Quantum Swarm, Win + Retry Screen
  * - @lees846
  */
 let sceneNum = 0;
 
+/**
+ * Load and declare goose sprite images, 
+ * start keeping time so the sprite is animated
+ * -@lees846
+ */
+let gooseSprite;
+
+function preload(){
+    gooseSprite = loadImage('assets/gooseSprite.gif');
+}
+
 function setup() {
   const { innerWidth, innerHeight } = window;
   createCanvas(innerWidth, innerHeight);
-
+  imageMode(CENTER);
   /**
    * @todo
    * These numbers need to change based on the difficulty level.

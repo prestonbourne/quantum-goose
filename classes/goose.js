@@ -32,8 +32,9 @@ class Goose {
    * the p5.js {@linkcode draw} function.
    */
   render() {
-    fill(this.color);
-    ellipse(this.x, this.y, 80, 80);
+    // fill(this.color);
+    // ellipse(this.x, this.y, 80, 80);
+    image(gooseSprite, this.x, this.y, 75, 50);
   }
 }
 
