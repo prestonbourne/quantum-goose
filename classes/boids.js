@@ -31,11 +31,11 @@ class Boid {
   constructor({
     x,
     y,
-    size = 150,
+    size = 50,
     maxSpeed = 3,
     maxForce = 0.05,
     color = "gray",
-    img
+    img = null
   }) {
     this.acceleration = createVector(random(3,-3),random(3,-3));
     this.velocity = createVector(1,1);
@@ -93,47 +93,40 @@ class Boid {
     translate(this.position.x, this.position.y);
     rotate(theta);
     fill(this.color);
-    // this draws a circle for goose body
-    // beginShape();
-    // ellipse(0, 0, this.size, this.size);
 
-    //replace the ellipse with the image
+    if(this.img){
+      image(this.img, this.size / 2, this.size/ 2)
+      
+    }else{
+      ellipse(0, 0, this.size, this.size);
+      //dumbum
+    }
 
-    image(this.img, this.size, this.size)
     pop();
-
-    // this draws a triangle for goose body
-    // beginShape();
-    // vertex(0, -this.size * 2);
-    // vertex(-this.size, this.size * 2);
-    // vertex(this.size, this.size * 2);
-    // endShape(CLOSE);
-    // pop();
   }
 
   borders() {
-    const borderWidthScaler = 1.3
-    const borderHeightScaler = 1
-    const hitLeft = this.position.x < borderHeightScaler*100;
+    const borderWidthScaler = 1
+    const hitLeft = this.position.x < 0;
     const hitRight = this.position.x > borderWidthScaler*width;
-    const hitTop = this.position.y < -borderHeightScaler*400;
+    const hitTop = this.position.y < 0;
     const hitBottom = this.position.y > borderWidthScaler*height;
 
     if (hitLeft) {
       // this.position.x = - this.size;
-      this.velocity.x *= -2
+      this.velocity.x *= -1
     }
     if (hitRight) {
       // this.position.x = -this.size;
-      this.velocity.x *= -2
+      this.velocity.x *= -1
     }
     if (hitTop) {
       // this.position.y = height + this.size;
-      this.velocity.y *= -2
+      this.velocity.y *= -1
     }
     if (hitBottom) {
       // this.position.y = -this.size;
-      this.velocity.y *= -2
+      this.velocity.y *= -1
     }
   }
 

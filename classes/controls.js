@@ -11,8 +11,58 @@
 
 const ANIMATION_DURATION_MS = 250;
 
+class GameManager{
+  /**
+   * @constructor
+   * @param {}
+   */
+  constructor(){
+    
+  }
 
-class SequenceInput {
+  victory(){
+  }
+
+  gameOver(){
+
+  }
+
+  start(){
+
+  }
+
+}
+
+class Sound {
+/**
+ * @constructor
+ * @param {Object} VictorySound 
+ * @param {Object} LoseSound 
+ */
+constructor(victory, lose){
+  this.victory = victory
+  this.lose = lose
+}
+
+playVictory(){
+  if (this.VictorySound.isPlaying()) {
+    this.VictorySound.stop();
+  } else {
+    this.VictorySound.play();
+  }
+}
+
+playLose(){
+  if (this.LoseSound.isPlaying()) {
+    this.LoseSound.stop();
+  } else {
+    this.LoseSound.play();
+  }
+}
+
+}
+  
+class SequenceInput extends GameManager {
   /**
    * Creates a new Controls instance.
    * @constructor
@@ -20,13 +70,14 @@ class SequenceInput {
    * @param {number} duration - The duration in milliseconds that the user has to enter the sequence.
    * @param {Object} sound - The honk sound goose make when goose turn into quantum goose
    */
-  constructor(sequence, duration, sound) {
+  constructor(sequence, duration) {
+    super(sequence,duration)
     this.sequence = sequence;
     this.duration = duration;
     this.currentPhase = 0;
     this.timer = null;
     this.input = "";
-    this.sound = sound
+    this.sound = new Sound()
     /**
      * @todo(@prestonbourne) - Add support for callbacks so that we can do something when the user succeeds or fails.
      */
@@ -110,7 +161,7 @@ class SequenceInput {
  * Represents a prompt that displays a message for a specified duration.
  * @class
  */
-class SequenceView {
+class SequenceView extends GameManager {
   /**
    * Creates a new SequencePrompt object.
    * @constructor
@@ -118,7 +169,7 @@ class SequenceView {
    * @param {string} options.message - The message to display in the prompt.
    */
   constructor({ message = "", sound}) {
-
+    super(message, sound)
     this.message = message;
     this.promptBox = document.createElement("div");
     this.promptBox.classList.add("sequence-view");

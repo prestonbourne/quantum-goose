@@ -29,7 +29,8 @@ function setup() {
       MIN_SEQUENCE_LENGTH,
       MAX_SEQUENCE_LENGTH
     );
-    const sequenceInput = new SequenceInput(sequence, FOUR_SECONDS, sound);
+    
+    const sequenceInput = new SequenceInput(sequence, FOUR_SECONDS);
     sequenceInput.onSuccess = () => {
       console.log("Success!");
       console.log("this code runs");
