@@ -197,6 +197,7 @@ class EntangledGoose extends Goose {
     const JITTER = 10;
     this.x = random(this.originX - JITTER, this.originX + JITTER);
     this.y = random(this.originY - JITTER, this.originY + JITTER);
-    ellipse(this.x, this.y, 80, 80);
+    // ellipse(this.x, this.y, 80, 80);
+    image(gooseSprite, this.x, this.y, 75, 50);
   }
 }
