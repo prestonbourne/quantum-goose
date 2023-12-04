@@ -29,8 +29,12 @@ let sceneNum = 0;
  * -@lees846
  */
 let gooseSprite;
+let sideGoose;
+let cLocation; //for cloud animations in Title Screen
 
 function preload(){
+    sideGoose = loadImage('assets/sideGoose.png');
+    cloud = loadImage('assets/quantumCloud.png');
     gooseSprite = loadImage('assets/gooseSprite.gif');
 }
 
@@ -38,6 +42,8 @@ function setup() {
   const { innerWidth, innerHeight } = window;
   createCanvas(innerWidth, innerHeight);
   imageMode(CENTER);
+
+  cLocation = width*5;
   /**
    * @todo
    * These numbers need to change based on the difficulty level.
