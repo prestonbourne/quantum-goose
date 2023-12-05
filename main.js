@@ -1,6 +1,7 @@
-let sceneNum = 2;
+let sceneNum = 4;
 let flocker = null;
 let gooseManager = null;
+let gameManager = null;
 
 
 function preload(){
@@ -29,7 +30,7 @@ function setup() {
       MIN_SEQUENCE_LENGTH,
       MAX_SEQUENCE_LENGTH
     );
-    
+    gameManager = new GameManager(sequence, FOUR_SECONDS)
     const sequenceInput = new SequenceInput(sequence, FOUR_SECONDS);
     sequenceInput.onSuccess = () => {
       console.log("Success!");
@@ -64,7 +65,9 @@ function draw() {
     // Scene 2: Entanglement Minigame
     case 2:
       scene2();
+      // gameManager.checkStatus();
       gooseManager.render()
+      gameManager.checkStatus()
       break;
 
     // Scene 3: Measurement Minigame

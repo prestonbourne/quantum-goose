@@ -21,25 +21,30 @@ class GameManager{
   }
 
   victory(){
+    return sceneNum = 4
   }
 
   gameOver(){
-
+    return sceneNum = 3
   }
 
-  start(){
-
+ checkStatus(){
+    this.sequenceInput.onSuccess = () => {
+      console.log("OOP!");
+      console.log("this code runs");
+    };
   }
 
 }
 
-class Sound {
+class Sound extends GameManager{
 /**
  * @constructor
  * @param {Object} VictorySound 
  * @param {Object} LoseSound 
  */
 constructor(victory, lose){
+  super(victory,lose)
   this.victory = victory
   this.lose = lose
 }
@@ -149,9 +154,6 @@ class SequenceInput extends GameManager {
         this.view.success();
         console.log(this.view.successAttempts)
         this.#stop();
-        if (this.onSuccess) {
-          this.onSuccess(this.sound);
-        }
       }
     }
   };
@@ -196,12 +198,6 @@ class SequenceView extends GameManager {
     console.log(this.successAttempts)
     setTimeout(() => {
       this.promptBox.remove();
-      if (this.sound.isPlaying()) {
-        // .isPlaying() returns a boolean
-        this.sound.stop();
-      } else {
-        this.sound.play();
-      }
     }, ANIMATION_DURATION_MS);
   }
 
@@ -214,16 +210,6 @@ class SequenceView extends GameManager {
       this.promptBox.remove();
     }, ANIMATION_DURATION_MS);
     
-  }
-
-  checkStatus(){
-    // console.log(this.failedAttempts)
-    // if(this.failedAttempts >=4){
-    //   return sceneNum = 4
-    // }
-    if(this.successAttempts ==3){
-      return sceneNum = 5
-    }
   }
 
 }

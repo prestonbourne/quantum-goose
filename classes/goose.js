@@ -223,15 +223,15 @@ class GooseManager {
   }
 }
 
-class PlayerGoose extends Goose {
-  constructor(color, x, y) {
-    super(color, x, y);
-  }
+// class PlayerGoose extends Goose {
+//   constructor(color, x, y) {
+//     super(color, x, y);
+//   }
 
-  entangle() {
-    console.log("entangle");
-  }
-}
+//   entangle() {
+//     console.log("entangle");
+//   }
+// }
 
 class EntangledGoose extends Goose {
   constructor(color, x, y) {
