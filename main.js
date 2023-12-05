@@ -1,4 +1,4 @@
-let sceneNum = 4;
+let sceneNum = 2;
 let flocker = null;
 let gooseManager = null;
 let gameManager = null;
@@ -30,11 +30,12 @@ function setup() {
       MIN_SEQUENCE_LENGTH,
       MAX_SEQUENCE_LENGTH
     );
-    gameManager = new GameManager(sequence, FOUR_SECONDS)
+    gameManager = new GameManager()
     const sequenceInput = new SequenceInput(sequence, FOUR_SECONDS);
     sequenceInput.onSuccess = () => {
       console.log("Success!");
       console.log("this code runs");
+      gameManager.successAttempt();
       gooseManager.entangle();
     };
     sequenceInput.start();
@@ -50,7 +51,8 @@ function setup() {
   });
 }
 function draw() {
-  
+  gameManager = new GameManager()
+  // gameManager.victory();
   switch (sceneNum) {
     // Scene 0: Title Screen
     case 0:
@@ -67,7 +69,7 @@ function draw() {
       scene2();
       // gameManager.checkStatus();
       gooseManager.render()
-      gameManager.checkStatus()
+      // gameManager.checkStatus()
       break;
 
     // Scene 3: Measurement Minigame
@@ -86,7 +88,7 @@ function draw() {
       break;
       
     default:
-      sceneNum = 0;
+      sceneNum = 2;
       break;
   }
 }

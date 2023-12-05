@@ -7,8 +7,6 @@
  * - @prestonbourne
  */
  
-
-
 const ANIMATION_DURATION_MS = 250;
 
 class GameManager{
@@ -17,8 +15,14 @@ class GameManager{
    * @param {}
    */
   constructor(){
-    
+    this.successAttempts = 0;
   }
+
+  successAttempt(){
+    console.log(this.successAttempts)
+    return this.successAttempts = 2;
+  }
+
 
   victory(){
     return sceneNum = 4
@@ -29,10 +33,10 @@ class GameManager{
   }
 
  checkStatus(){
-    this.sequenceInput.onSuccess = () => {
-      console.log("OOP!");
-      console.log("this code runs");
-    };
+    // this.sequenceInput.onSuccess = () => {
+    //   console.log("OOP!");
+    //   console.log("this code runs");
+    // };
   }
 
 }
@@ -152,7 +156,7 @@ class SequenceInput extends GameManager {
       this.currentPhase++;
       if (this.currentPhase === this.sequence.length) {
         this.view.success();
-        console.log(this.view.successAttempts)
+        // console.log(this.view.successAttempts)
         this.#stop();
       }
     }
@@ -170,8 +174,8 @@ class SequenceView extends GameManager {
    * @param {Object} options - The options for the prompt.
    * @param {string} options.message - The message to display in the prompt.
    */
-  constructor({ message = "", sound}) {
-    super(message, sound)
+  constructor({ message = ""}) {
+    super(message)
     this.message = message;
     this.promptBox = document.createElement("div");
     this.promptBox.classList.add("sequence-view");
@@ -183,8 +187,6 @@ class SequenceView extends GameManager {
     this.promptBox.appendChild(this.charBox);
     this.promptBox.appendChild(this.charBox);
     this.sound = sound
-    this.failedAttempts=0;
-    this.successAttempts=0;
     document.body.appendChild(this.promptBox);
   }
 
@@ -192,11 +194,13 @@ class SequenceView extends GameManager {
     this.charBox.innerText += text;
   }
 
-  success() {
+  success(){
     this.promptBox.style.backgroundColor = "lime";
-    this.successAttempts ++;
-    console.log(this.successAttempts)
+    // console.log(this.successAttempts);
+
+    
     setTimeout(() => {
+      super.successAttempt();
       this.promptBox.remove();
     }, ANIMATION_DURATION_MS);
   }
@@ -204,12 +208,9 @@ class SequenceView extends GameManager {
   failure() {
     this.promptBox.style.backgroundColor = "red";
     this.promptBox.classList.add("shake");
-    this.failedAttempts ++;
-    this.checkStatus();
     setTimeout(() => {
       this.promptBox.remove();
     }, ANIMATION_DURATION_MS);
-    
   }
 
 }
