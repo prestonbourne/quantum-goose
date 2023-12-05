@@ -6,6 +6,7 @@ class Flock {
   run() {
     for (let i = 0; i < this.boids.length; i++) {
       this.boids[i].run(this.boids);
+  
     }
   }
 
@@ -61,7 +62,7 @@ class Boid {
     const coh = this.cohesion(boids);
     sep.mult(1.5);
     ali.mult(1.0);
-    coh.mult(1.0);
+    coh.mult(3.0);
     this.applyForce(sep);
     this.applyForce(ali);
     this.applyForce(coh);
@@ -84,44 +85,34 @@ class Boid {
   }
 
   render() {
-    const theta = this.velocity.heading() + radians(90);
-
-    stroke(200);
-    push();
-    translate(this.position.x, this.position.y);
-    rotate(theta);
-    fill(this.color);
-    // this draws a circle for goose body
-    beginShape();
-    ellipse(0, 0, this.size, this.size);
-    pop();
-
-    // this draws a triangle for goose body
-    // beginShape();
-    // vertex(0, -this.size * 2);
-    // vertex(-this.size, this.size * 2);
-    // vertex(this.size, this.size * 2);
-    // endShape(CLOSE);
-    // pop();
+   
+    push()
+    image(gooseSprite, this.position.x, this.position.y, 75, 50);
+    pop()
   }
 
   borders() {
-    const hitLeft = this.position.x < -this.size;
-    const hitRight = this.position.x > width + this.size;
-    const hitTop = this.position.y < -this.size;
-    const hitBottom = this.position.y > height + this.size;
+    const borderWidthScaler = 1
+    const hitLeft = this.position.x < 0;
+    const hitRight = this.position.x > borderWidthScaler*width;
+    const hitTop = this.position.y < 0;
+    const hitBottom = this.position.y > borderWidthScaler*height;
 
     if (hitLeft) {
-      this.position.x = width + this.size;
+      // this.position.x = - this.size;
+      this.velocity.x *= -1
     }
     if (hitRight) {
-      this.position.x = -this.size;
+      // this.position.x = -this.size;
+      this.velocity.x *= -1
     }
     if (hitTop) {
-      this.position.y = height + this.size;
+      // this.position.y = height + this.size;
+      this.velocity.y *= -1
     }
     if (hitBottom) {
-      this.position.y = -this.size;
+      // this.position.y = -this.size;
+      this.velocity.y *= -1
     }
   }
 
