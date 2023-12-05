@@ -7,24 +7,86 @@
  * - @prestonbourne
  */
  
-
-
 const ANIMATION_DURATION_MS = 250;
 
+class GameManager{
+  /**
+   * @constructor
+   * @param {}
+   */
+  constructor(){
+    this.successAttempts = 0;
+  }
 
-class SequenceInput {
+  successAttempt(){
+    console.log(this.successAttempts)
+    return this.successAttempts = 2;
+  }
+
+
+  victory(){
+    return sceneNum = 4
+  }
+
+  gameOver(){
+    return sceneNum = 3
+  }
+
+ checkStatus(){
+    // this.sequenceInput.onSuccess = () => {
+    //   console.log("OOP!");
+    //   console.log("this code runs");
+    // };
+  }
+
+}
+
+class Sound extends GameManager{
+/**
+ * @constructor
+ * @param {Object} VictorySound 
+ * @param {Object} LoseSound 
+ */
+constructor(victory, lose){
+  super(victory,lose)
+  this.victory = victory
+  this.lose = lose
+}
+
+playVictory(){
+  if (this.VictorySound.isPlaying()) {
+    this.VictorySound.stop();
+  } else {
+    this.VictorySound.play();
+  }
+}
+
+playLose(){
+  if (this.LoseSound.isPlaying()) {
+    this.LoseSound.stop();
+  } else {
+    this.LoseSound.play();
+  }
+}
+
+}
+  
+class SequenceInput extends GameManager {
   /**
    * Creates a new Controls instance.
    * @constructor
    * @param {string} sequence - The sequence that the user needs to enter.
    * @param {number} duration - The duration in milliseconds that the user has to enter the sequence.
+   * @param {Object} sound - The honk sound goose make when goose turn into quantum goose
    */
   constructor(sequence, duration) {
+    super(sequence,duration)
     this.sequence = sequence;
     this.duration = duration;
     this.currentPhase = 0;
     this.timer = null;
     this.input = "";
+    this.sound = new Sound()
     /**
      * @todo(@prestonbourne) - Add support for callbacks so that we can do something when the user succeeds or fails.
      */
@@ -34,6 +96,8 @@ class SequenceInput {
       message: `Enter the following sequence within ${
         this.duration / 1000
       } seconds: ${this.sequence}`,
+      sound: this.sound
+      
     });
   }
 
@@ -55,6 +119,7 @@ class SequenceInput {
 
   #stop() {
     clearTimeout(this.timer);
+    this.view.failedAttempts +=1;
     document.removeEventListener("keydown", this.handleKeyDown.bind(this));
   }
 
@@ -88,14 +153,11 @@ class SequenceInput {
       }
     } else {
       this.input += key;
-
       this.currentPhase++;
       if (this.currentPhase === this.sequence.length) {
         this.view.success();
+        // console.log(this.view.successAttempts)
         this.#stop();
-        if (this.onSuccess) {
-          this.onSuccess();
-        }
       }
     }
   };
@@ -105,15 +167,15 @@ class SequenceInput {
  * Represents a prompt that displays a message for a specified duration.
  * @class
  */
-class SequenceView {
+class SequenceView extends GameManager {
   /**
    * Creates a new SequencePrompt object.
    * @constructor
    * @param {Object} options - The options for the prompt.
    * @param {string} options.message - The message to display in the prompt.
    */
-  constructor({ message = "" }) {
-
+  constructor({ message = ""}) {
+    super(message)
     this.message = message;
     this.promptBox = document.createElement("div");
     this.promptBox.classList.add("sequence-view");
@@ -124,6 +186,7 @@ class SequenceView {
     this.charBox.classList.add("sequence-view__char-box");
     this.promptBox.appendChild(this.charBox);
     this.promptBox.appendChild(this.charBox);
+    this.sound = sound
     document.body.appendChild(this.promptBox);
   }
 
@@ -131,9 +194,13 @@ class SequenceView {
     this.charBox.innerText += text;
   }
 
-  success() {
+  success(){
     this.promptBox.style.backgroundColor = "lime";
+    // console.log(this.successAttempts);
+
+    
     setTimeout(() => {
+      super.successAttempt();
       this.promptBox.remove();
     }, ANIMATION_DURATION_MS);
   }
@@ -145,4 +212,5 @@ class SequenceView {
       this.promptBox.remove();
     }, ANIMATION_DURATION_MS);
   }
+
 }

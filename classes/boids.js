@@ -26,6 +26,7 @@ class Boid {
  * @param {string} [options.color] - The color of the Boid.
  * @param {number} [options.maxSpeed=3] - The maximum speed of the Boid.
  * @param {number} [options.maxForce=0.05] - The maximum steering force applied to the Boid.
+ * @param {Object} image -image of the goose
  */
   constructor({
     x,
@@ -34,14 +35,16 @@ class Boid {
     maxSpeed = 3,
     maxForce = 0.05,
     color = "gray",
+    img = null
   }) {
-    this.acceleration = createVector(1, 1);
-    this.velocity = createVector(random(-1, 1), random(-1, 1));
-    this.position = createVector(x, y);
+    this.acceleration = createVector(random(3,-3),random(3,-3));
+    this.velocity = createVector(1,1);
+    this.position = createVector(x+300, y+100);
     this.size = size;
     this.maxSpeed = maxSpeed + 10;
     this.maxForce = maxForce;
     this.color = color;
+    this.img = img
   }
 
   run(boids) {
@@ -85,43 +88,45 @@ class Boid {
 
   render() {
     const theta = this.velocity.heading() + radians(90);
-
     stroke(200);
     push();
     translate(this.position.x, this.position.y);
     rotate(theta);
     fill(this.color);
-    // this draws a circle for goose body
-    beginShape();
-    ellipse(0, 0, this.size, this.size);
-    pop();
 
-    // this draws a triangle for goose body
-    // beginShape();
-    // vertex(0, -this.size * 2);
-    // vertex(-this.size, this.size * 2);
-    // vertex(this.size, this.size * 2);
-    // endShape(CLOSE);
-    // pop();
+    if(this.img){
+      image(this.img, this.size / 2, this.size/ 2)
+      
+    }else{
+      ellipse(0, 0, this.size, this.size);
+      //dumbum
+    }
+
+    pop();
   }
 
   borders() {
-    const hitLeft = this.position.x < -this.size;
-    const hitRight = this.position.x > width + this.size;
-    const hitTop = this.position.y < -this.size;
-    const hitBottom = this.position.y > height + this.size;
+    const borderWidthScaler = 1
+    const hitLeft = this.position.x < 0;
+    const hitRight = this.position.x > borderWidthScaler*width;
+    const hitTop = this.position.y < 0;
+    const hitBottom = this.position.y > borderWidthScaler*height;
 
     if (hitLeft) {
-      this.position.x = width + this.size;
+      // this.position.x = - this.size;
+      this.velocity.x *= -1
     }
     if (hitRight) {
-      this.position.x = -this.size;
+      // this.position.x = -this.size;
+      this.velocity.x *= -1
     }
     if (hitTop) {
-      this.position.y = height + this.size;
+      // this.position.y = height + this.size;
+      this.velocity.y *= -1
     }
     if (hitBottom) {
-      this.position.y = -this.size;
+      // this.position.y = -this.size;
+      this.velocity.y *= -1
     }
   }
 

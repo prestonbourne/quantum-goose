@@ -1,0 +1,9 @@
+class measure{
+    constructor(){
+
+    }
+
+    spin(){
+        
+    }
+}

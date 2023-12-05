@@ -1,7 +1,14 @@
 let sceneNum = 2;
 let flocker = null;
 let gooseManager = null;
+let gameManager = null;
 
+
+function preload(){
+  quantumGooseImg = loadImage('assets/goose.png')
+  classicGooseImg = loadImage('assets/goose3.png')
+  sound = loadSound('assets/GeeseHonk.wav')
+}
 
 function setup() {
   const { innerWidth, innerHeight } = window;
@@ -23,10 +30,12 @@ function setup() {
       MIN_SEQUENCE_LENGTH,
       MAX_SEQUENCE_LENGTH
     );
+    gameManager = new GameManager()
     const sequenceInput = new SequenceInput(sequence, FOUR_SECONDS);
     sequenceInput.onSuccess = () => {
       console.log("Success!");
       console.log("this code runs");
+      gameManager.successAttempt();
       gooseManager.entangle();
     };
     sequenceInput.start();
@@ -36,11 +45,14 @@ function setup() {
   flocker = new Flock();
   gooseManager = new GooseManager({
     numGeese: 7,
-    flocker: flocker
+    flocker: flocker,
+    img: quantumGooseImg,
+    classic: classicGooseImg
   });
 }
 function draw() {
-  
+  gameManager = new GameManager()
+  // gameManager.victory();
   switch (sceneNum) {
     // Scene 0: Title Screen
     case 0:
@@ -55,7 +67,9 @@ function draw() {
     // Scene 2: Entanglement Minigame
     case 2:
       scene2();
+      // gameManager.checkStatus();
       gooseManager.render()
+      // gameManager.checkStatus()
       break;
 
     // Scene 3: Measurement Minigame
@@ -72,8 +86,9 @@ function draw() {
     case 5:
       scene5();
       break;
+      
     default:
-      sceneNum = 0;
+      sceneNum = 2;
       break;
   }
 }
