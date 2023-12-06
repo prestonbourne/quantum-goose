@@ -30,11 +30,11 @@ let sceneNum = 0;
  */
 let gooseSprite;
 let sideGoose;
-let cLocation; //for cloud animations in Title Screen
+let cloud1, cloud2, cloud3; //decorative title screen clouds
 
 function preload(){
     sideGoose = loadImage('assets/sideGoose.png');
-    cloud = loadImage('assets/quantumCloud.png');
+    cloudImg = loadImage('assets/quantumCloud.png');
     gooseSprite = loadImage('assets/gooseSprite.gif');
 }
 
@@ -42,8 +42,12 @@ function setup() {
   const { innerWidth, innerHeight } = window;
   createCanvas(innerWidth, innerHeight);
   imageMode(CENTER);
-
-  cLocation = width*5;
+  rectMode(CENTER);
+  
+  // Initialize cloud object for Title Screen
+  cloud1 = new Cloud(); 
+  cloud2 = new Cloud();
+  cloud3 = new Cloud();
   /**
    * @todo
    * These numbers need to change based on the difficulty level.
