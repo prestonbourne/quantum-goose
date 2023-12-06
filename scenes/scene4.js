@@ -1,5 +1,5 @@
 function scene4() {
-    background("skyblue");
+    background("deepskyblue");
 
     flock.run();
   

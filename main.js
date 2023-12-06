@@ -13,7 +13,7 @@
 let gooseManager = null;
 let sequenceInput = null;
 let currentPhase = 0;
-let disable = false;
+let disable = false; //decorative title screen clouds
 
 
 /**
@@ -34,17 +34,20 @@ let flock
  */
 let gooseSprite;
 let sideGoose;
-let cLocation; //for cloud animations in Title Screen
+let cloud1, cloud2, cloud3;
+ //for cloud animations in Title Screen
 
 let successAttempts =0;
 let failedAttempts = 0;
 let ledflock;
+ //decorative title screen clouds
 
 function preload(){
     sideGoose = loadImage('assets/sideGoose.png');
-    cloud = loadImage('assets/quantumCloud.png');
     gooseSprite = loadImage('assets/gooseSprite.gif');
     sound = loadSound('assets/GeeseHonk.wav')
+    cloudImg = loadImage('assets/quantumCloud.png');
+
 }
 
 function setup() {
@@ -77,7 +80,13 @@ function setup() {
   createCanvas(innerWidth, innerHeight);
   imageMode(CENTER);
 
-  cLocation = width*5;
+  rectMode(CENTER);
+
+  // Initialize cloud object for Title Screen
+  cloud1 = new Cloud(); 
+  cloud2 = new Cloud();
+  cloud3 = new Cloud();
+
   /**
    * @todo
    * These numbers need to change based on the difficulty level.
@@ -129,14 +138,16 @@ function draw() {
   switch(sceneNum){
       // Scene 0: Title Screen 
         case 0:
-          titleScreen();
           disable = true
+          titleScreen();
+
         break;
 
       // Scene 1: Instruction Screen
         case 1:
-          scene1();
           disable = true
+          scene1();
+
         break;
 
       // Scene 2: Entanglement Minigame
