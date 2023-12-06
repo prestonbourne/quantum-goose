@@ -6,6 +6,7 @@ class Flock {
   run() {
     for (let i = 0; i < this.boids.length; i++) {
       this.boids[i].run(this.boids);
+  
     }
   }
 
@@ -26,25 +27,22 @@ class Boid {
  * @param {string} [options.color] - The color of the Boid.
  * @param {number} [options.maxSpeed=3] - The maximum speed of the Boid.
  * @param {number} [options.maxForce=0.05] - The maximum steering force applied to the Boid.
- * @param {Object} image -image of the goose
  */
   constructor({
     x,
     y,
     size = 50,
     maxSpeed = 3,
-    maxForce = 0.05,
+    maxForce = 0.02,
     color = "gray",
-    img = null
   }) {
-    this.acceleration = createVector(random(3,-3),random(3,-3));
-    this.velocity = createVector(1,1);
-    this.position = createVector(x+300, y+100);
+    this.acceleration = createVector(1, 1);
+    this.velocity = createVector(random(-1, 1), random(-1, 1));
+    this.position = createVector(x, y);
     this.size = size;
-    this.maxSpeed = maxSpeed + 10;
+    this.maxSpeed = maxSpeed + 5;
     this.maxForce = maxForce;
     this.color = color;
-    this.img = img
   }
 
   run(boids) {
@@ -64,7 +62,7 @@ class Boid {
     const coh = this.cohesion(boids);
     sep.mult(1.5);
     ali.mult(1.0);
-    coh.mult(1.0);
+    coh.mult(3.0);
     this.applyForce(sep);
     this.applyForce(ali);
     this.applyForce(coh);
@@ -87,22 +85,10 @@ class Boid {
   }
 
   render() {
-    const theta = this.velocity.heading() + radians(90);
-    stroke(200);
-    push();
-    translate(this.position.x, this.position.y);
-    rotate(theta);
-    fill(this.color);
-
-    if(this.img){
-      image(this.img, this.size / 2, this.size/ 2)
-      
-    }else{
-      ellipse(0, 0, this.size, this.size);
-      //dumbum
-    }
-
-    pop();
+   
+    push()
+    image(gooseSprite, this.position.x, this.position.y, 75, 50);
+    pop()
   }
 
   borders() {
@@ -157,7 +143,7 @@ class Boid {
   }
 
   align(boids) {
-    const NEIGHBOR_DIST = 50;
+    const NEIGHBOR_DIST = 150;
     let sum = createVector(0, 0);
     let count = 0;
     for (let i = 0; i < boids.length; i++) {
