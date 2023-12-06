@@ -1,5 +1,5 @@
 function scene2() {
-    background("skyblue");
+    background("deepskyblue");
     gooseManager.render();
     
     // fill("white");

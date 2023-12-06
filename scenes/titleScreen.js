@@ -4,39 +4,45 @@ function titleScreen() {
     fill("white");
     textFont('IBM Plex Serif');
     
-    drawCloud(0.1, 1, 1);
-    drawCloud(0.3, 1, 3);
+    cloud1.display(); 
+    cloud1.move();
+    cloud2.display();
+    cloud2.move();
+    cloud3.display();
+    cloud3.move();
 
+    textSize(48);
+    text("A Bird's Eye View", width/2, height/2 - 80);
     textSize(32);
-    text("A Bird's Eye View", width/2, height/2 - 70);
-    textSize(18);
     text("of Quantum Computing", width/2, height/2 - 45);
     image(sideGoose, width/2, height/2 + 50, sideGoose.width, sideGoose.height);
     
-    drawCloud(0.5, 1, 5);
-
+    // Next Button:
     let buttonX = width/2;
-    let buttonY = height/2 + 150;
-    let buttonWidth = 100;
-    let buttonHeight = 50;
+    let buttonY = height*5/6;
+    let buttonWidth = 120;
+    let buttonHeight = 40;
+    let buttonRadius = 10;
     
-    fill("orange");
-    rectMode(CENTER);
-    rect(buttonX, buttonY, buttonWidth, buttonHeight);
-    
-    fill("white");
-    textSize(18);
-    text("Next Scene", buttonX, buttonY);
-    
-    if (mouseIsPressed && mouseX >= buttonX - buttonWidth/2 && mouseX <= buttonX + buttonWidth/2 && mouseY >= buttonY - buttonHeight/2 && mouseY <= buttonY + buttonHeight/2) {
-        sceneNum+=2;
-    }
-}
-
-function drawCloud(scaleFactor, cloudSpeed, cHeight) {
-    image(cloud, cLocation*scaleFactor, height*cHeight/6, cloud.width*scaleFactor, cloud.height*scaleFactor);
-    if (cLocation < width*(-5)){
-        cLocation = width*5;
-    }
-    cLocation -= cloudSpeed*cHeight/5;
+    push();
+        stroke("white");
+        fill("deepskyblue");
+        rectMode(CENTER);
+        textSize(18);
+        if (mouseX >= buttonX - buttonWidth/2 && mouseX <= buttonX + buttonWidth/2 && mouseY >= buttonY - buttonHeight/2 && mouseY <= buttonY + buttonHeight/2) {
+            fill("skyblue");
+            textSize(20);
+            buttonWidth += 10;
+            buttonHeight += 10;
+            buttonRadius += 10;
+        }
+        if (mouseIsPressed && mouseX >= buttonX - buttonWidth/2 && mouseX <= buttonX + buttonWidth/2 && mouseY >= buttonY - buttonHeight/2 && mouseY <= buttonY + buttonHeight/2) {
+            sceneNum ++;
+        }
+        rect(buttonX, buttonY, buttonWidth, buttonHeight, buttonRadius);
+        fill("white");
+        noStroke();
+        text("Start!", buttonX, buttonY + 5);
+        
+    pop();
 }
