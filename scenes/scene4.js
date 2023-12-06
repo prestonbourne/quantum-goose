@@ -2,7 +2,12 @@ function scene4() {
     background("deepskyblue");
 
     flock.run();
-  
+    cloud1.display(); 
+
+    cloud2.display();
+
+    cloud3.display();
+
     // Draw the boids
   
     textSize(30);
