@@ -7,7 +7,7 @@ function scene1() {
     cloud2.move();
     cloud3.display();
     cloud3.move();  
-    
+
     push();
         noStroke();
         fill(100, 150, 200, 100);
