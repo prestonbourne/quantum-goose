@@ -19,12 +19,14 @@ class SequenceInput {
    * @param {string} sequence - The sequence that the user needs to enter.
    * @param {number} duration - The duration in milliseconds that the user has to enter the sequence.
    */
-  constructor(sequence, duration) {
+  constructor(sequence, duration,sound) {
     this.sequence = sequence;
     this.duration = duration;
     this.currentPhase = 0;
     this.timer = null;
     this.input = "";
+    this.disable = null
+    this.sound = sound
     /**
      * @todo(@prestonbourne) - Add support for callbacks so that we can do something when the user succeeds or fails.
      */
@@ -34,16 +36,23 @@ class SequenceInput {
       message: `Enter the following sequence within ${
         this.duration / 1000
       } seconds: ${this.sequence}`,
+      sound:sound
     });
   }
 
   start() {
+    if(disable){
+      this.view.promptBox.style.display = 'none'
+      return
+    }
+    this.view.promptBox.style.display = 'block'
     console.log(
       `Enter the following sequence within ${this.duration} seconds: ${this.sequence}`
     );
 
     this.timer = setTimeout(() => {
       console.log("Time is up!");
+      failedAttempts+=1
       this.#stop();
       this.view.failure();
       if (this.onError) {
@@ -51,6 +60,12 @@ class SequenceInput {
       }
     }, this.duration);
     document.addEventListener("keydown", this.handleKeyDown.bind(this));
+  }
+
+  disabled(){
+    disable = true;
+    this.view.promptBox.remove();
+
   }
 
   #stop() {
@@ -72,6 +87,7 @@ class SequenceInput {
     this.view.addText(key);
     if (key !== this.sequence[this.currentPhase]) {
       this.view.failure();
+      this.currentPhase = 0;
       console.error(
         `Error: Expected ${
           this.sequence[this.currentPhase]
@@ -88,10 +104,12 @@ class SequenceInput {
       }
     } else {
       this.input += key;
-
       this.currentPhase++;
       if (this.currentPhase === this.sequence.length) {
         this.view.success();
+        currentPhase = 0
+        this.sequence = ''
+        this
         this.#stop();
         if (this.onSuccess) {
           this.onSuccess();
@@ -105,15 +123,14 @@ class SequenceInput {
  * Represents a prompt that displays a message for a specified duration.
  * @class
  */
-class SequenceView {
+class SequenceView{
   /**
    * Creates a new SequencePrompt object.
    * @constructor
    * @param {Object} options - The options for the prompt.
    * @param {string} options.message - The message to display in the prompt.
    */
-  constructor({ message = "" }) {
-
+  constructor({ message = "" ,sound}) {
     this.message = message;
     this.promptBox = document.createElement("div");
     this.promptBox.classList.add("sequence-view");
@@ -124,17 +141,26 @@ class SequenceView {
     this.charBox.classList.add("sequence-view__char-box");
     this.promptBox.appendChild(this.charBox);
     this.promptBox.appendChild(this.charBox);
+    this.sound = sound
     document.body.appendChild(this.promptBox);
   }
 
   addText(text) {
+    // if(disable){
+    //   this.promptBox.style.display = 'none'
+    //   return
+    // }
+    // this.promptBox.style.display = 'block'
     this.charBox.innerText += text;
   }
 
   success() {
     this.promptBox.style.backgroundColor = "lime";
     setTimeout(() => {
+      successAttempts+=1
+      this.sound.play()
       this.promptBox.remove();
+      this.sequence = null;
     }, ANIMATION_DURATION_MS);
   }
 
@@ -145,4 +171,6 @@ class SequenceView {
       this.promptBox.remove();
     }, ANIMATION_DURATION_MS);
   }
+
+
 }

@@ -11,6 +11,9 @@
  * @type {GooseManager | null}
  */
 let gooseManager = null;
+let sequenceInput = null;
+let currentPhase = 0;
+let disable = false; //decorative title screen clouds
 
 /**
  * The sceneNum variable indicates which scene is actively displaying in the browser
@@ -22,7 +25,7 @@ let gooseManager = null;
  * - @lees846
  */
 let sceneNum = 0;
-
+let flock
 /**
  * Load and declare goose sprite images, 
  * start keeping time so the sprite is animated
@@ -30,24 +33,56 @@ let sceneNum = 0;
  */
 let gooseSprite;
 let sideGoose;
-let cloud1, cloud2, cloud3; //decorative title screen clouds
+let cloud1, cloud2, cloud3;
+ //for cloud animations in Title Screen
+
+let successAttempts =0;
+let failedAttempts = 0;
+let ledflock;
+ //decorative title screen clouds
 
 function preload(){
     sideGoose = loadImage('assets/sideGoose.png');
-    cloudImg = loadImage('assets/quantumCloud.png');
     gooseSprite = loadImage('assets/gooseSprite.gif');
+    sound = loadSound('assets/GeeseHonk.wav')
+    cloudImg = loadImage('assets/quantumCloud.png');
 }
 
 function setup() {
+
+  flock = new Flock(); // Initialize the flock
+  
+  // Add an initial set of boids into the system
+  for (let i = 0; i < 50; i++) {
+    let theta = i * 2 * PI / 50;  // Calculate angle for each boid
+    let radius = 300;             // Set the radius of the circle
+    let x = radius * cos(theta);  // Calculate x-coordinate using parametric equation
+    let y = radius * sin(theta);  // Calculate y-coordinate using parametric equation
+    let b = new Boid({             // Create a new Boid object
+      x: x + 700,                        // Set x-coordinate
+      y: y + 400,                        // Set y-coordinate
+    });
+    flock.addBoid(b);              // Add the Boid to the flock
+  }
+
+  ledflock = new Flock();
+  let bb = new Boid({
+    x:700,
+    y:500
+  })
+  ledflock.addBoid(bb);
+
   const { innerWidth, innerHeight } = window;
   createCanvas(innerWidth, innerHeight);
   imageMode(CENTER);
+
   rectMode(CENTER);
-  
+
   // Initialize cloud object for Title Screen
   cloud1 = new Cloud(); 
   cloud2 = new Cloud();
   cloud3 = new Cloud();
+
   /**
    * @todo
    * These numbers need to change based on the difficulty level.
@@ -55,27 +90,36 @@ function setup() {
    * and then pass that into the {@linkcode SequenceInput} class.
    * - @prestonbourne
    */
+  // const SIX_SECONDS = 6000;
   const FOUR_SECONDS = 4000;
   /* Prompt the user to create a new sequence every 4.5 seconds, internally this class removes itself from the DOM after the alloted duration + some buffer time for animations. */
   setInterval(() => {
-    const MIN_SEQUENCE_LENGTH = 2;
-    const MAX_SEQUENCE_LENGTH = 2;
-    const sequence = getRandomSequence(
-      MIN_SEQUENCE_LENGTH,
-      MAX_SEQUENCE_LENGTH
-    );
-    const sequenceInput = new SequenceInput(sequence, FOUR_SECONDS);
+    // const MIN_SEQUENCE_LENGTH = 2;
+    // const MAX_SEQUENCE_LENGTH = 6;
+    const sequence = getRandomSequence();
+    sequenceInput = new SequenceInput(sequence, FOUR_SECONDS,sound);
     sequenceInput.onSuccess = () => {
       console.log("Success!");
       gooseManager.entangle();
     };
-    sequenceInput.start();
+      sequenceInput.start()
   }, FOUR_SECONDS + 500);
   const flocker = new Flock();
   gooseManager = new GooseManager({
-    numGeese: 13,
+    numGeese: 11,
     flocker
   });
+}
+
+function statCheck(){
+  if(failedAttempts >=1){
+    sceneNum = 3
+  }
+
+  //9
+  if(successAttempts >9){
+    sceneNum = 4
+  }
 }
 
 /**
@@ -85,33 +129,39 @@ function setup() {
  * - @lees846
  */
 function draw() {  
-
+  statCheck()
   
   // Swich case for scenes
   switch(sceneNum){
       // Scene 0: Title Screen 
         case 0:
+          disable = true
           titleScreen();
         break;
 
       // Scene 1: Instruction Screen
         case 1:
+          disable = true
           scene1();
         break;
 
       // Scene 2: Entanglement Minigame
         case 2:
-          scene2();
+          disable = false;
+          scene2()
           gooseManager.render();
         break;
         
       // Scene 3: QG Abandoned, Lose + Retry Screen
         case 3:
+          
+          disable = true
           scene3();
         break;
       
       // Scene 4: Quantum Swarm, Win + Retry Screen
         case 4:
+          disable = true
           scene4();
         break;
     }

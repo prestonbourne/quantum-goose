@@ -33,14 +33,14 @@ class Boid {
     y,
     size = 50,
     maxSpeed = 3,
-    maxForce = 0.05,
+    maxForce = 0.02,
     color = "gray",
   }) {
     this.acceleration = createVector(1, 1);
     this.velocity = createVector(random(-1, 1), random(-1, 1));
     this.position = createVector(x, y);
     this.size = size;
-    this.maxSpeed = maxSpeed + 10;
+    this.maxSpeed = maxSpeed;
     this.maxForce = maxForce;
     this.color = color;
   }
@@ -62,7 +62,7 @@ class Boid {
     const coh = this.cohesion(boids);
     sep.mult(1.5);
     ali.mult(1.0);
-    coh.mult(3.0);
+    coh.mult(1.0);
     this.applyForce(sep);
     this.applyForce(ali);
     this.applyForce(coh);
@@ -117,7 +117,7 @@ class Boid {
   }
 
   separate(boids) {
-    let desiredSeperation = 25.0;
+    let desiredSeperation = 50.0;
     let steer = createVector(0, 0);
     let count = 0;
     for (let i = 0; i < boids.length; i++) {
@@ -143,7 +143,7 @@ class Boid {
   }
 
   align(boids) {
-    const NEIGHBOR_DIST = 50;
+    const NEIGHBOR_DIST = 150;
     let sum = createVector(0, 0);
     let count = 0;
     for (let i = 0; i < boids.length; i++) {
@@ -166,7 +166,7 @@ class Boid {
   }
 
   cohesion(boids) {
-    let neighbordist = 50;
+    let neighbordist = 350;
     let sum = createVector(0, 0);
     let count = 0;
     for (let i = 0; i < boids.length; i++) {
